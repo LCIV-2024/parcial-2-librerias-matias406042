@@ -53,8 +53,16 @@ public class ReservationService {
         if (bookEntity.getAvailableQuantity() <= 0) {
             throw new RuntimeException("El libro no está disponible para reserva");
         }
+
+        reservation.setUser(user);
         reservation.setBook(bookEntity);
         reservation.setRentalDays(requestDTO.getRentalDays());
+        reservation.setStartDate(requestDTO.getStartDate());
+        reservation.setExpectedReturnDate(requestDTO.getStartDate().plusDays(requestDTO.getRentalDays()));
+        reservation.setDailyRate(bookEntity.getPrice());
+        reservation.setTotalFee(calculateTotalFee(bookEntity.getPrice(), requestDTO.getRentalDays()));
+        reservation.setStatus(Reservation.ReservationStatus.ACTIVE);
+
         // Crear la reserva
         Reservation saved= reservationRepository.save(reservation);
         // Reducir la cantidad disponible
