@@ -1,14 +1,11 @@
-# Usa una imagen base de OpenJDK
-FROM openjdk:11-jdk-slim
-
-# Establece el directorio de trabajo en el contenedor
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copia el archivo JAR compilado al contenedor
-COPY target/mi-aplicacion.jar /app.jar
-
-# Expone el puerto 8080 para la aplicación
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Define el comando de ejecución
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -54,6 +54,7 @@ public class ReservationService {
             throw new RuntimeException("El libro no está disponible para reserva");
         }
         reservation.setBook(bookEntity);
+        reservation.setRentalDays(requestDTO.getRentalDays());
         // Crear la reserva
         Reservation saved= reservationRepository.save(reservation);
         // Reducir la cantidad disponible
