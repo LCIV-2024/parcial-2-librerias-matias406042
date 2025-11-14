@@ -144,7 +144,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationResponseDTO> getOverdueReservations() {
 
-        return reservationRepository.findByStatusAndExpectedReturnDateBefore("ACTIVE", LocalDate.now()).stream()
+        return reservationRepository.findByStatusAndExpectedReturnDateBefore(Reservation.ReservationStatus.ACTIVE, LocalDate.now()).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
 
